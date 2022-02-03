@@ -1,0 +1,24 @@
+<div>
+    <h1>Proxmox</h1>
+</div>
+<div class="container">
+    <div class="menu">
+        {{ q['burger-menu'] | raw }}
+    </div>
+    <div class="content">
+        <div class="ui segment">
+            <div class="content">
+                <div class="header">{%block contentTitle %}{%endblock%}</div>
+                <!-- TODO Ajout verif block contentAction existe .. on affiche  -->
+            </div>
+            <div class="content">
+                {% block toto %}{% endblock %}
+            </div>
+            <!-- TODO verif si contentBottomAction existe .. on affiche -->
+<!--            <div class="extra content">
+                <button class="ui button">Join Project</button>
+            </div>-->
+        </div>
+
+    </div>
+</div>

@@ -19,3 +19,15 @@ body{
 .segment.container {
 	background-color: #4d4d4d;
 }
+
+.container {
+	display: flex;
+}
+
+.container .menu {
+	flex-basis: 20%;
+}
+
+.container .content {
+	flex-basis: 80%;
+}

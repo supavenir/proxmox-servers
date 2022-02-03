@@ -3,7 +3,8 @@
         "php": ">=7.4",
         "twig\/twig": "^3.0",
         "phpmv\/ubiquity": "^2.3",
-        "phpmv\/php-mv-ui": "^2.4"
+        "phpmv\/php-mv-ui": "^2.4",
+        "phpmv/php-ssh-proxmox": "dev-main"
     },
     "require-dev": {
         "monolog\/monolog": "^2.2",
@@ -13,6 +14,8 @@
         "czproject\/git-php": "^3.13",
         "phpmv\/ubiquity-attributes": "dev-main"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "": "app\/"

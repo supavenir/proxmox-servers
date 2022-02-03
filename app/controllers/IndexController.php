@@ -1,12 +1,15 @@
 <?php
 namespace controllers;
 
+use Ajax\php\ubiquity\JsUtils;
+use PHPMV\ProxmoxApi;
 use Ubiquity\core\postinstall\Display;
 use Ubiquity\log\Logger;
 use Ubiquity\themes\ThemesManager;
 
 /**
- * Controller IndexController
+ * Controller
+ * @property JsUtils $jquery
  */
 class IndexController extends ControllerBase {
 

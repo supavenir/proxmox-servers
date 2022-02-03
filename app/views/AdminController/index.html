@@ -1,0 +1,8 @@
+{% extends "@activeTheme/main/main.html" %}
+
+{% block contentTitle %} toto {% endblock %}
+
+{% block toto %}
+    {{parent()}}
+    {{ q['vms'] | raw }}
+{% endblock %}
