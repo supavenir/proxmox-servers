@@ -1,14 +1,15 @@
-<div>
+<div class="header">
     <h1>Proxmox</h1>
+    <a href="{{path('admin.addServer')}}" class="ui primary button">Créer groupe</a>
 </div>
 <div class="container">
-    <div class="menu">
+    <div class="menu ui segment">
         {{ q['burger-menu'] | raw }}
     </div>
     <div class="content">
         <div class="ui segment">
-            <div class="content">
-                <div class="header">{%block contentTitle %}{%endblock%}</div>
+            <div class="header-content">
+                <div class="title"><h3>{%block contentTitle %}{%endblock%}</h3></div>
                 <!-- TODO Ajout verif block contentAction existe .. on affiche  -->
             </div>
             <div class="content">
