@@ -63,4 +63,8 @@ body .header-actions{
 
 body .container .content .header-content {
 	min-height: 5vh;
+	margin: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }

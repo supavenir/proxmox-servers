@@ -9,7 +9,7 @@
         <div class="nav-links">
             <a href="{{path('serveur.addServer')}}" class="ui basic violet button"><i class="fas fa-user-friends"></i> Groupes</a>
             <a href="{{path('serveur.addServer')}}" class="ui basic violet button"><i class="fas fa-user"></i> Utilisateurs</a>
-            <a href="{{path('serveur.addServer')}}" class="ui basic violet button"><i class="fas fa-server"></i> Serveurs</a>
+            <a href="{{path('serveur.getAll')}}" class="ui basic violet button"><i class="fas fa-server"></i> Serveurs</a>
             <a href="{{path('index')}}" class="ui basic violet button"><i class="fas fa-network-wired"></i> VMs</a>
             <a href="{{path('serveur.addServer')}}" class="ui basic violet button"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
         </div>
@@ -20,11 +20,17 @@
     <div class="content">
         <div class="ui segment">
             <div class="header-content">
-                <div class="title"><h3>{%block contentTitle %}{%endblock%}</h3></div>
-                <!-- TODO Ajout verif block contentAction existe .. on affiche  -->
+                <div class="title">
+                    <h3>{%block contentTitle %}{%endblock%}</h3>
+                </div>
+                {% if block("contentHeaderAction") is defined %}
+                    <div class="actions">
+                        {%block contentHeaderAction %}{%endblock%}
+                    </div>
+                {% endif %}
             </div>
             <div class="content" id="content">
-                {% block toto %}{% endblock %}
+                {% block content %}{% endblock %}
             </div>
             {% if block("contentBottomAction") is defined %}
             <div class="extra content">
@@ -32,6 +38,5 @@
             </div>
             {% endif %}
         </div>
-
     </div>
 </div>

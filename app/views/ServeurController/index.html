@@ -1,1 +1,12 @@
-<!--View associated to index action of ServeurController controller -->
+{% extends "@activeTheme/main/main.html" %}
+
+{% block contentTitle %} Serveurs actifs : {% endblock %}
+
+{% block contentHeaderAction %}
+    <a href="{{path('serveur.addServer')}}" class="ui violet button"><i class="fas fa-plus"></i> Ajouter</a>
+{% endblock %}
+
+{% block content %}
+{{parent()}}
+{{ q['servers'] | raw }}
+{% endblock %}

@@ -20,7 +20,13 @@ class ServeurController extends \controllers\ControllerBase
     #[Get(path: "server", name: "serveur.getAll")]
     public function index()
     {
-        $this->loadView("ServeurController/index.html");
+        $dt = $this->jquery->semantic()->dataTable("servers", \StdClass::class, DAO::getAll(Serveur::class));
+        $dt->setFields(["dnsName", "ipAddress", "login", "VMs"]);
+        $dt->setCaptions(["Nom du serveur", "Adresse IP", "Identifiant", "Nombre de VMs"]);
+        $dt->setStriped();
+        $dt->setCelled();
+        $this->jquery->renderView("ServeurController/index.html");
+        /*$this->loadView("ServeurController/index.html");*/
     }
 
     #[Get(path: "server/add", name: "serveur.addServer")]
@@ -29,16 +35,16 @@ class ServeurController extends \controllers\ControllerBase
         $div = $this->jquery->semantic()->htmlDivider("form-container");
         $form = $this->jquery->semantic()->dataForm('addServerForm', new Serveur());
         $form->setFields(["dnsName\n", "ipAddress\n", "login", "password\n", "btSubmit"]); //Select fields to update
-        $form->fieldAsInput('dnsName', ["rules" => [Rule::not("", "Veuillez saisir le nom du serveur")]]);
-        $form->fieldAsInput('ipAddress', ["rules" => [Rule::not("", "Veuillez saisir l'adresse IP du serveur")]]);
-        $form->fieldAsInput('login', ["rules" => [Rule::not("", "Veuillez saisir un identifiant de connexion")]]);
-        $form->fieldAsInput('password', ["inputType" => "password", "rules" => ["empty"]]);
+        $form->fieldAsInput(0, ["rules" => [Rule::not("", "Veuillez saisir le nom du serveur")]]);
+        $form->fieldAsInput(1, ["rules" => [Rule::not("", "Veuillez saisir l'adresse IP du serveur")]]);
+        $form->fieldAsInput(2, ["rules" => [Rule::not("", "Veuillez saisir un identifiant de connexion")]]);
+        $form->fieldAsInput(3, ["inputType" => "password", "rules" => [["empty", "Veuillez saisir un mot de passe de connexion"]]]);
         $form->setCaptions(["Nom du serveur", "IP du serveur", "Identifiant", "Mot de passe"]);
         $form->setValidationParams(["on" => "blur", "inline" => true]);
         $form->setProperty("method", "POST");
         $form->setProperty("action", Router::path("serveur.saveServer"));
         $form->fieldAsSubmit("btSubmit", "blue", Router::path("serveur.saveServer"),
-            '#content', ["value" => "Valider", 'hasLoader'=>'internal']);
+            'body', ["value" => "Valider", 'hasLoader'=>'internal']);
         /*$this->jquery->click("#form-submit", '$("#addServerForm").submit()');*/
         $this->jquery->renderView("ServeurController/addServer.html");
     }
@@ -50,14 +56,8 @@ class ServeurController extends \controllers\ControllerBase
         URequest::setValuesToObject($serveur);
         try {
             DAO::insert($serveur);
-            // Le contexte POST reste après la redirection
-            //$this->forward("controllers\AdminController", "index", null, true, true);
-            //$this->redirectToRoute("admin.getVms", null, true, true);
-
-            // Le contexte POST reste après la redirection, mais en plus le nombre de serveurs ne bouge pas sur la vue
-            // si initialize n'est pas appelé
-            $this->initialize();
-            $this->index();
+            $this->makeInitialTemplate();
+                $this->index();
             //header("Location: ../../" . Router::path("index"));
         } catch (\Exception $e) {
 

@@ -1,8 +1,8 @@
 {% extends "@activeTheme/main/main.html" %}
 
-{% block contentTitle %} Machine virtuelles {% endblock %}
+{% block contentTitle %} VMs actives : {% endblock %}
 
-{% block toto %}
-    {{parent()}}
-    {{ q['vms'] | raw }}
+{% block content %}
+{{parent()}}
+{{ q['vms'] | raw }}
 {% endblock %}

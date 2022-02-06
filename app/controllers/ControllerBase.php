@@ -5,9 +5,9 @@ namespace controllers;
 use Ajax\php\ubiquity\JsUtils;
 use models\Serveur;
 use PHPMV\ProxmoxApi;
+use Ubiquity\controllers\Controller;
 use Ubiquity\orm\DAO;
 use Ubiquity\utils\http\URequest;
-use Ubiquity\controllers\Controller;
 
 /**
  * controllers$ControllerBase
@@ -20,6 +20,9 @@ abstract class ControllerBase extends Controller
 
     protected $footerView = "@activeTheme/main/vFooter.html";
 
+    /**
+     * @var ProxmoxApi
+     */
     protected $api;
 
     public function initialize()
@@ -45,8 +48,8 @@ abstract class ControllerBase extends Controller
         $serveurs = array_map(fn($serveur): string => $serveur->getDnsName(), $serveurs);
         $vms = $this->api->getVms();
         $vms = array_map(fn($vm): string => $vm['name'], $vms);
-        $menu->addItem(["Serveurs - ".count($serveurs), $this->jquery->semantic()->htmlList("servers", $serveurs)]);
-        $menu->addItem(["VMs - ".count($vms), $this->jquery->semantic()->htmlList("vms", $vms)]);
+        $menu->addItem(["Serveurs - " . count($serveurs), $this->jquery->semantic()->htmlList("servers", $serveurs)]);
+        $menu->addItem(["VMs - " . count($vms), $this->jquery->semantic()->htmlList("servers", $vms)]);
         $menu->getItem(0)->setActive(true);
         $menu->setStyled();
     }
