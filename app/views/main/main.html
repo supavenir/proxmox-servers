@@ -3,7 +3,7 @@
     <a href="{{path('admin.addServer')}}" class="ui primary button">Créer groupe</a>
 </div>
 <div class="container">
-    <div class="menu ui segment">
+    <div class="menu ui fluid segment">
         {{ q['burger-menu'] | raw }}
     </div>
     <div class="content">
@@ -15,10 +15,11 @@
             <div class="content">
                 {% block toto %}{% endblock %}
             </div>
-            <!-- TODO verif si contentBottomAction existe .. on affiche -->
-<!--            <div class="extra content">
-                <button class="ui button">Join Project</button>
-            </div>-->
+            {% if block("contentBottomAction") is defined %}
+            <div class="extra content">
+                {% block contentBottomAction %}{% endblock %}
+            </div>
+            {% endif %}
         </div>
 
     </div>

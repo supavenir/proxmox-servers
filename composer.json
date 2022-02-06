@@ -19,6 +19,9 @@
     "autoload": {
         "psr-4": {
             "": "app\/"
-        }
+        },
+        "files": [
+            "app/Tools/dv.php"
+        ]
     }
 }

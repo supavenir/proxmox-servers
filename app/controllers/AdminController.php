@@ -2,6 +2,7 @@
 
 namespace controllers;
 
+use Ajax\semantic\components\validation\Rule;
 use models\Serveur;
 use Ubiquity\attributes\items\router\Post;
 use Ubiquity\attributes\items\router\Get;
@@ -41,24 +42,18 @@ class AdminController extends \controllers\ControllerBase
     #[Get(path: "/server/add", name: "admin.addServer")]
     public function addServer()
     {
-        $form = $this->jquery->semantic()->htmlForm("addServerForm", [
-            $this->jquery->semantic()->htmlInput("server-name", "text", null, "Nom du serveur"),
-            $this->jquery->semantic()->htmlInput("server-ip", "text", null, "IP du serveur"),
-            $this->jquery->semantic()->htmlInput("server-login", "text", null, "Identifiant"),
-            $this->jquery->semantic()->htmlInput("server-pwd", "password", null, "Mot de passe"),
-        ]);
+        $div = $this->jquery->semantic()->htmlDivider("form-container");
+        $form=$this->jquery->semantic()->dataForm('addServerForm',new Serveur());
+        $form->setFields(["name\n","ip\n",'login','password']); //Select fields to update
+        $form->fieldAsInput(0, ["rules" => [Rule::not("", "Veuillez saisir le nom du serveur")]]);
+        $form->fieldAsInput(1, ["rules" => [Rule::not("", "Veuillez saisir l'adresse IP du serveur")]]);
+        $form->fieldAsInput(2, ["rules" => [Rule::not("", "Veuillez saisir un identifiant de connexion")]]);
+        $form->fieldAsInput(3, ["inputType" => "password", "rules" => ["empty"]]);
+        $form->setCaptions(["Nom du serveur", "IP du serveur", "Identifiant", "Mot de passe"]);
+        $form->setValidationParams(["on"=>"blur","inline"=>true]);
         $form->setProperty("method", "POST");
         $form->setProperty("action", Router::path("admin.postAddServer"));
-        $form->addExtraFieldRule("server-name", "empty");
-        $form->addExtraFieldRule("server-ip", "empty");
-        $form->addExtraFieldRule("server-login", "empty");
-        $form->addExtraFieldRule("server-pwd", "empty");
-/*        $this->jquery->jsonOn('change', '#server-name', Router::path('admin.getServerIpByName', []),
-            'post', ['attr' => 'value', "jsCallback" => function ($response) {
-                $serverIp = $this->jquery->semantic()->getHtmlComponent("server-ip");
-                $serverIp->setProperty("value", $response);
-            }]);*/
-        $form->addButton("form-submit", "Valider");
+        $this->jquery->click("#form-submit", '$("#addServerForm").submit()');
         $this->jquery->renderView("AdminController/addServer.html");
     }
 
@@ -70,10 +65,10 @@ class AdminController extends \controllers\ControllerBase
     {
         $values = URequest::getPost();
         $serveur = new Serveur();
-        $serveur->setDnsName($values["server-name"]);
-        $serveur->setIpAddress($values["server-ip"]);
-        $serveur->setLogin($values["server-login"]);
-        $serveur->setPassword($values["server-pwd"]);
+        $serveur->setDnsName($values["name"]);
+        $serveur->setIpAddress($values["ip"]);
+        $serveur->setLogin($values["login"]);
+        $serveur->setPassword($values["password"]);
         DAO::save($serveur);
         $this->forward("controllers\AdminController", "index", null, true, true);
     }

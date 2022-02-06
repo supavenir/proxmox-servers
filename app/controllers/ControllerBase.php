@@ -41,10 +41,13 @@ abstract class ControllerBase extends Controller
     public function makeInitialTemplate()
     {
         $div = $this->jquery->semantic()->htmlDivider('burger-menu');
-        $menu = $this->jquery->semantic()->htmlAccordionMenu('menu', ["Serveurs", "VMs"]);
+        $menu = $this->jquery->semantic()->htmlAccordion('menu');
+
         $serveurs = DAO::getAll(Serveur::class);
         $serveurs = array_map(fn($serveur): string => $serveur->getDnsName(), $serveurs);
-        $menu->getItem(0)->addContent($this->jquery->semantic()->htmlList("servers", $serveurs));
+        $menu->addItem(["Serveurs - ".count($serveurs), $this->jquery->semantic()->htmlList("servers", $serveurs)]);
+        $menu->addItem(["VMs", null]);
+        $menu->setStyled();
         $div->addContent($menu);
     }
 }
