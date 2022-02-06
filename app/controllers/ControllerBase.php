@@ -44,8 +44,10 @@ abstract class ControllerBase extends Controller
         $serveurs = DAO::getAll(Serveur::class);
         $serveurs = array_map(fn($serveur): string => $serveur->getDnsName(), $serveurs);
         $vms = $this->api->getVms();
+        $vms = array_map(fn($vm): string => $vm['name'], $vms);
         $menu->addItem(["Serveurs - ".count($serveurs), $this->jquery->semantic()->htmlList("servers", $serveurs)]);
-        $menu->addItem(["VMs - ".count($vms), null]);
+        $menu->addItem(["VMs - ".count($vms), $this->jquery->semantic()->htmlList("vms", $vms)]);
+        $menu->getItem(0)->setActive(true);
         $menu->setStyled();
     }
 }

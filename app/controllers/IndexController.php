@@ -3,6 +3,7 @@ namespace controllers;
 
 use Ajax\php\ubiquity\JsUtils;
 use PHPMV\ProxmoxApi;
+use PHPMV\ProxmoxMaster;
 use Ubiquity\core\postinstall\Display;
 use Ubiquity\log\Logger;
 use Ubiquity\themes\ThemesManager;
@@ -14,7 +15,19 @@ use Ubiquity\themes\ThemesManager;
 class IndexController extends ControllerBase {
 
 	public function index() {
-		$defaultPage = Display::getDefaultPage();
+        $vms = $this->api->getVMs();
+        $dt = $this->jquery->semantic()->dataTable('vms', \StdClass::class, $vms);
+        $dt->setFields(ProxmoxMaster::VM_FIELDS);
+        $dt->fieldAsLabel('status', attributes: ['jsCallback' => function ($label, $instance) {
+            if ($instance->status == "running") {
+                $label->addClass('green');
+            }
+            if ($instance->status == "stopped") {
+                $label->addClass('red');
+            }
+        }]);
+        $this->jquery->renderView("AdminController/index.html");
+/*		$defaultPage = Display::getDefaultPage();
 		$links = Display::getLinks();
 		$infos = Display::getPageInfos();
 
@@ -23,7 +36,7 @@ class IndexController extends ControllerBase {
 		if (\count($themes) > 0) {
 			$this->loadView('@activeTheme/main/vMenu.html', \compact('themes', 'activeTheme'));
 		}
-		$this->loadView($defaultPage, \compact('defaultPage', 'links', 'infos', 'activeTheme'));
+		$this->loadView($defaultPage, \compact('defaultPage', 'links', 'infos', 'activeTheme'));*/
 	}
 
 	public function ct($theme) {
