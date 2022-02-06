@@ -1,11 +1,22 @@
 <div class="header">
-    <h1>Proxmox</h1>
-    <a href="{{path('admin.addServer')}}" class="ui primary button">Créer groupe</a>
+    <div class="image">
+        <img src="assets/img/logo.png"/>
+    </div>
+    <div class="header-actions">
+        <div class="user-infos">
+            <p>Bienvenue Thomas.L</p>
+        </div>
+        <div class="nav-links">
+            <a href="{{path('admin.addServer')}}" class="ui basic violet button"><i class="fas fa-user-friends"></i> Groupes</a>
+            <a href="{{path('admin.addServer')}}" class="ui basic violet button"><i class="fas fa-user"></i> Utilisateurs</a>
+            <a href="{{path('admin.addServer')}}" class="ui basic violet button"><i class="fas fa-server"></i> Serveurs</a>
+            <a href="{{path('admin.getVms')}}" class="ui basic violet button"><i class="fas fa-network-wired"></i> VMs</a>
+            <a href="{{path('admin.addServer')}}" class="ui basic violet button"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+        </div>
+    </div>
 </div>
 <div class="container">
-    <div class="menu ui fluid segment">
-        {{ q['burger-menu'] | raw }}
-    </div>
+    {{ q['menu'] | raw }}
     <div class="content">
         <div class="ui segment">
             <div class="header-content">

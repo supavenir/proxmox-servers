@@ -21,6 +21,27 @@ body{
 
 body .header {
 	min-height: 15vh;
+	padding: 10px;
+}
+
+body .header img {
+	width: 250px;
+}
+
+body .header .image {
+	height: 10vh;
+	display: flex;
+	align-items: center;
+}
+
+body .header-actions p {
+	font-size: 1.5em;
+}
+
+body .header-actions{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .container {
@@ -28,8 +49,8 @@ body .header {
 	padding: 5px;
 }
 
-.container .menu {
-	flex-basis: 20%;
+.container #menu {
+	flex-basis: 20% !important;
 	background-color: #ffffff;
 	margin: 5px;
 

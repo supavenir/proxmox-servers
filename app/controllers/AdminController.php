@@ -34,7 +34,7 @@ class AdminController extends \controllers\ControllerBase
                 $label->addClass('red');
             }
         }]);
-        $this->jquery->renderDefaultView();
+        $this->jquery->renderView("AdminController/index.html");
 
         /*$this->loadView("AdminController/index.html");*/
     }
@@ -44,15 +44,17 @@ class AdminController extends \controllers\ControllerBase
     {
         $div = $this->jquery->semantic()->htmlDivider("form-container");
         $form=$this->jquery->semantic()->dataForm('addServerForm',new Serveur());
-        $form->setFields(["name\n","ip\n",'login','password']); //Select fields to update
-        $form->fieldAsInput(0, ["rules" => [Rule::not("", "Veuillez saisir le nom du serveur")]]);
-        $form->fieldAsInput(1, ["rules" => [Rule::not("", "Veuillez saisir l'adresse IP du serveur")]]);
-        $form->fieldAsInput(2, ["rules" => [Rule::not("", "Veuillez saisir un identifiant de connexion")]]);
-        $form->fieldAsInput(3, ["inputType" => "password", "rules" => ["empty"]]);
+        $form->setFields(["dnsName\n","ipAddress\n",'login','password']); //Select fields to update
+        $form->fieldAsInput('dnsName', ["rules" => [Rule::not("", "Veuillez saisir le nom du serveur")]]);
+        $form->fieldAsInput('ipAddress', ["rules" => [Rule::not("", "Veuillez saisir l'adresse IP du serveur")]]);
+        $form->fieldAsInput('login', ["rules" => [Rule::not("", "Veuillez saisir un identifiant de connexion")]]);
+        $form->fieldAsInput('password', ["inputType" => "password", "rules" => ["empty"]]);
         $form->setCaptions(["Nom du serveur", "IP du serveur", "Identifiant", "Mot de passe"]);
         $form->setValidationParams(["on"=>"blur","inline"=>true]);
         $form->setProperty("method", "POST");
         $form->setProperty("action", Router::path("admin.postAddServer"));
+/*        $form->addSubmit("submit", "Valider", "blue", Router::path("admin.postAddServer"),
+            '#response',['hasLoader'=>'internal']);*/
         $this->jquery->click("#form-submit", '$("#addServerForm").submit()');
         $this->jquery->renderView("AdminController/addServer.html");
     }
@@ -63,14 +65,22 @@ class AdminController extends \controllers\ControllerBase
     #[Post(path: "/server/add", name: "admin.postAddServer")]
     public function saveServer()
     {
-        $values = URequest::getPost();
         $serveur = new Serveur();
-        $serveur->setDnsName($values["name"]);
-        $serveur->setIpAddress($values["ip"]);
-        $serveur->setLogin($values["login"]);
-        $serveur->setPassword($values["password"]);
-        DAO::save($serveur);
-        $this->forward("controllers\AdminController", "index", null, true, true);
+        URequest::setValuesToObject($serveur);
+        try {
+            DAO::insert($serveur);
+            // Le contexte POST reste après la redirection
+            //$this->forward("controllers\AdminController", "index", null, true, true);
+            //$this->redirectToRoute("admin.getVms", null, true, true);
+
+            // Le contexte POST reste après la redirection, mais en plus le nombre de serveurs ne bouge pas sur la vue
+            // si initialize n'est pas appelé
+            //$this->initialize();
+            //$this->index();
+            header("Location: ../../".Router::path("admin.getVms"));
+        } catch (\Exception $e) {
+
+        }
     }
 
 
