@@ -1,2 +1,2 @@
 <?php
-return array("server"=>["/server/ip/(.+?)/"]);
+return array("server"=>["/server/ip/(.+?)/","/server/(.+?)/"]);

@@ -68,3 +68,16 @@ body .container .content .header-content {
 	align-items: center;
 	justify-content: space-between;
 }
+
+.server-general-infos {
+	margin-bottom: 10px;
+}
+
+.server-associated-infos {
+	display: flex;
+	flex-direction: column;
+}
+
+.server-associated-infos .section {
+	margin: 10px 0;
+}

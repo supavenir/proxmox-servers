@@ -3,6 +3,7 @@
 namespace controllers;
 
 use Ajax\php\ubiquity\JsUtils;
+use Ajax\Semantic;
 use models\Serveur;
 use PHPMV\ProxmoxApi;
 use Ubiquity\controllers\Controller;
@@ -25,9 +26,15 @@ abstract class ControllerBase extends Controller
      */
     protected $api;
 
+    /**
+     * @var Semantic
+     */
+    protected $semantic;
+
     public function initialize()
     {
         $this->api = new ProxmoxApi('servers1.sts-sio-caen.info', 'sio1a', 'sio1a');
+        $this->semantic = $this->jquery->semantic();
         if (!URequest::isAjax()) {
             $this->loadView($this->headerView);
         }
@@ -52,6 +59,18 @@ abstract class ControllerBase extends Controller
         $menu->addItem(["VMs - " . count($vms), $this->jquery->semantic()->htmlList("servers", $vms)]);
         $menu->getItem(0)->setActive(true);
         $menu->setStyled();
+    }
+
+    public function getVmStatusByName($name){
+        $vms = $this->api->getVMs();
+        $result = null;
+        for($i=0;$i<count($vms);$i++){
+            if($vms[$i]["name"] === $name){
+                $result = $vms[$i];
+                break;
+            }
+        }
+        return $result;
     }
 }
 

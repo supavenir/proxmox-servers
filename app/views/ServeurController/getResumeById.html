@@ -1,0 +1,17 @@
+{% extends "@activeTheme/main/main.html" %}
+
+{% block contentTitle %} {{serveur.dnsName}} {% endblock %}
+
+{% block content %}
+    <div class="server-general-infos">
+        <div class="form">
+            {{ q['updateServerForm'] | raw }}
+        </div>
+    </div>
+    <div class="server-associated-infos">
+        <div class="section server-vms">
+            <h3>Machines virtuelles :</h3>
+            {{ q['vmsOfServer'] | raw }}
+        </div>
+    </div>
+{% endblock %}
