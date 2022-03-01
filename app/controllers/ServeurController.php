@@ -3,7 +3,6 @@
 namespace controllers;
 
 use Ajax\semantic\components\validation\Rule;
-use Ajax\semantic\html\elements\html5\HtmlLink;
 use Ajax\semantic\html\elements\HtmlButton;
 use models\Serveur;
 use Ubiquity\attributes\items\router\Get;
@@ -23,14 +22,16 @@ class ServeurController extends \controllers\ControllerBase
     public function index()
     {
         $dt = $this->semantic->dataTable("servers", \StdClass::class, DAO::getAll(Serveur::class));
+        $dt->setIdentifierFunction('getId');
         $dt->setFields(["dnsName", "ipAddress", "login", "VMs"]);
         $dt->setCaptions(["Nom du serveur", "Adresse IP", "Identifiant", "Nombre de VMs", "Actions"]);
-        $dt->addDisplayButton(true, [], function(HtmlButton $object, Serveur $instance){
-            $object->setIdentifier("server-".$instance->getId());
-            $this->jquery->_add_event("#server-".$instance->getId(),"
-                window.location.href = '".Router::url("serveur.getResumeById", ["id" => $instance->getId()])."'
+        $dt->addDisplayButton(true, [],/* function (HtmlButton $object, Serveur $instance) {
+            $object->setIdentifier("server-" . $instance->getId());
+            $this->jquery->_add_event("#server-" . $instance->getId(), "
+                window.location.href = '" . Router::url("serveur.getResumeById", ["id" => $instance->getId()]) . "'
             ", "click");
-        });
+        }*/);
+        $this->jquery->getOnClick('._display',Router::url("serveur.getResumeById",['']),'body',['attr'=>'data-ajax']);
         $dt->setStriped();
         $dt->setCelled();
         $this->jquery->renderView("ServeurController/index.html");
@@ -55,7 +56,7 @@ class ServeurController extends \controllers\ControllerBase
         $form->setProperty("method", "POST");
         $form->setProperty("action", Router::path("serveur.saveServer"));
         $form->fieldAsSubmit("btSubmit", "blue", Router::path("serveur.saveServer"),
-            'body', ["value" => "Valider", 'hasLoader'=>'internal']);
+            'body', ["value" => "Valider", 'hasLoader' => 'internal']);
         $this->jquery->renderView("ServeurController/addServer.html");
     }
 
@@ -82,8 +83,9 @@ class ServeurController extends \controllers\ControllerBase
         echo json_encode(["ip" => empty($name) ? "" : gethostbyname($name)]);
     }
 
-	#[Get(path: "server/{id}",name: "serveur.getResumeById")]
-	public function getResumeById($id){
+    #[Get(path: "server/{id}", name: "serveur.getResumeById")]
+    public function getResumeById($id)
+    {
         $serveur = DAO::getById(Serveur::class, $id);
         $form = $this->semantic->dataForm("updateServerForm", $serveur);
         $form->setFields(["description\n", "ipAddress", "port\n", "submit"]);
@@ -98,5 +100,5 @@ class ServeurController extends \controllers\ControllerBase
         $this->jquery->renderView("ServeurController/getResumeById.html", [
             "serveur" => $serveur
         ]);
-	}
+    }
 }

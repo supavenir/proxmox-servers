@@ -2,11 +2,14 @@
 
 namespace controllers;
 
+use Ajax\bootstrap\html\HtmlLink;
 use Ajax\php\ubiquity\JsUtils;
 use Ajax\Semantic;
+use Ajax\semantic\html\elements\HtmlHeader;
 use models\Serveur;
 use PHPMV\ProxmoxApi;
 use Ubiquity\controllers\Controller;
+use Ubiquity\controllers\Router;
 use Ubiquity\orm\DAO;
 use Ubiquity\utils\http\URequest;
 
@@ -33,7 +36,7 @@ abstract class ControllerBase extends Controller
 
     public function initialize()
     {
-        $this->api = new ProxmoxApi('servers1.sts-sio-caen.info', 'sio1a', 'sio1a');
+        $this->api = new ProxmoxApi('servers2.sts-sio-caen.info', 'sio2a', 'sio2a');
         $this->semantic = $this->jquery->semantic();
         if (!URequest::isAjax()) {
             $this->loadView($this->headerView);
@@ -50,13 +53,24 @@ abstract class ControllerBase extends Controller
 
     public function makeInitialTemplate()
     {
-        $menu = $this->jquery->semantic()->htmlAccordion('menu');
+        $menu = $this->semantic->htmlAccordion('menu');
         $serveurs = DAO::getAll(Serveur::class);
-        $serveurs = array_map(fn($serveur): string => $serveur->getDnsName(), $serveurs);
+        //$serveurs = array_map(fn($serveur): string => $serveur->getDnsName(), $serveurs);
         $vms = $this->api->getVms();
         $vms = array_map(fn($vm): string => $vm['name'], $vms);
-        $menu->addItem(["Serveurs - " . count($serveurs), $this->jquery->semantic()->htmlList("servers", $serveurs)]);
-        $menu->addItem(["VMs - " . count($vms), $this->jquery->semantic()->htmlList("servers", $vms)]);
+        $menu->addItem(["Serveurs - " . count($serveurs), []/*$this->semantic->htmlList("servers", $serveurs*/]);
+
+        foreach ($serveurs as $serveur){
+            $div = $this->semantic->htmlCard("server-card-".$serveur->getId());
+            $div->addItemContent([$this->semantic->htmlHeader("server-title-".$serveur->getId(), 4, $serveur->getDnsName())]);
+            $div->addExtraContent("coucou");
+            $div->asLink("https://google.com");
+/*            $div->_ajaxOn("get", "click", Router::url("serveur.getResumeById", ["id" => $serveur->getId()]),
+                "body", ["value" => "Valider", 'hasLoader' => 'internal']);*/
+            $menu->getItem(0)->addContent($div);
+        }
+
+        $menu->addItem(["VMs - " . count($vms), $this->semantic->htmlList("servers", $vms)]);
         $menu->getItem(0)->setActive(true);
         $menu->setStyled();
     }
